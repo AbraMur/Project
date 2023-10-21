@@ -4,6 +4,7 @@ from grid import Grid
 from logic_movement import Movement
 from perlin_generate import *
 from assets import *
+from tank import Tank
 
 
 
@@ -27,7 +28,7 @@ class Game(object):
         self.grid_dict = self.grid.get()  # мы получаем сетку
         self.position_local = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
 
-        self.tank_sprite = pygame.image.load('assets/tank/Sprite-0001.png')
+        self.tank = Tank(screen=self.screen)
 
 
     def setup(self):
@@ -67,8 +68,13 @@ class Game(object):
     def draw(self):
         self.screen.fill(WHITE)
         #  pygame.draw.circle(self.screen, BLACK, self.grid_dict[self.position_local][0], test_radius_object)
-        self.tank_rect = self.tank_sprite.get_rect(center=self.grid_dict[self.position_local][0])
-        self.screen.blit(self.tank_sprite, self.tank_rect)
+        if bool(abs(self.motion_vector[0])+abs(self.motion_vector[1])):
+            self.tank.tank_drive(center_tank=self.grid_dict[self.position_local][0])
+        else:
+            self.tank.tank_stand(center_tank=self.grid_dict[self.position_local][0])
+
+        # self.tank_rect = self.tank_sprite.get_rect(center=self.grid_dict[self.position_local][0])
+        # self.screen.blit(self.tank_sprite, self.tank_rect)
 
         for i in range(numbers_width_grid + 1):
             for j in range(numbers_height_grid + 1):
