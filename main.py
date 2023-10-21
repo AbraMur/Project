@@ -7,7 +7,6 @@ from assets import *
 from tank import Tank
 
 
-
 class Game(object):
     '''
     ЭТО ОСНОВНОЙ КЛАСС В КОТОРОМ ПРОИСХОДЯТ ВСЕ СОБЫТИЯ, метод setup отвечает за начальные настройки,
@@ -21,15 +20,15 @@ class Game(object):
         self.running = True  # переменная что бы работал главный цикл
         self.grid = Grid()  # переменная класса сетки ( создаем сетку, получаем и тп )
         self.movement = Movement()  # переменная класса мовемент ( движение )
-        self.motion_vector = 0, 0  # вектор "движения"
+        self.motion = 0  # вектор "движения"
         seed = random.randint(1000, 3000)
         heights = perlin_generate(seed)
         self.grid.generate(heights)
+        self.rotate = 0
         self.grid_dict = self.grid.get()  # мы получаем сетку
         self.position_local = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
 
         self.tank = Tank(screen=self.screen)
-
 
     def setup(self):
         while self.grid_dict[self.position_local][1] != 0:
@@ -41,9 +40,9 @@ class Game(object):
             for event in pygame.event.get():
                 self.event_handler(event)
 
-            self.motion_vector = self.movement.collision_wall(self.position_local, self.motion_vector, self.grid_dict)
-            self.position_local = self.movement.movement(self.position_local, self.motion_vector)
-            self.position_local, self.motion_vector = self.movement.fix(self.position_local, self.motion_vector)
+            self.motion = self.movement.collision_wall(self.position_local, self.motion, self.grid_dict, self.rotate)
+            self.position_local = self.movement.movement(self.position_local, self.motion, self.rotate)
+            self.position_local, self.motion = self.movement.fix(self.position_local, self.motion)
             self.draw()
             pygame.display.update()
             self.clock.tick(FPS)
@@ -55,26 +54,23 @@ class Game(object):
             if event.key == pygame.K_ESCAPE:
                 self.stop()
             if event.key == pygame.K_w:
-                self.motion_vector = self.motion_vector[0], self.motion_vector[1] - acceleration
+                self.motion = self.motion - acceleration
             if event.key == pygame.K_a:
-                self.motion_vector = self.motion_vector[0] - acceleration, self.motion_vector[1]
+                self.rotate = (self.rotate + 1) % 12
             if event.key == pygame.K_d:
-                self.motion_vector = self.motion_vector[0] + acceleration, self.motion_vector[1]
+                self.rotate = (self.rotate - 1) % 12
             if event.key == pygame.K_s:
-                self.motion_vector = self.motion_vector[0], self.motion_vector[1] + acceleration
+                self.motion = self.motion + acceleration
             if event.key == pygame.K_SPACE:
-                self.motion_vector = 0, 0
+                self.motion = 0
 
     def draw(self):
         self.screen.fill(WHITE)
-        #  pygame.draw.circle(self.screen, BLACK, self.grid_dict[self.position_local][0], test_radius_object)
-        if bool(abs(self.motion_vector[0])+abs(self.motion_vector[1])):
-            self.tank.tank_drive(center_tank=self.grid_dict[self.position_local][0])
-        else:
-            self.tank.tank_stand(center_tank=self.grid_dict[self.position_local][0])
 
-        # self.tank_rect = self.tank_sprite.get_rect(center=self.grid_dict[self.position_local][0])
-        # self.screen.blit(self.tank_sprite, self.tank_rect)
+        if bool(abs(self.motion)):
+            self.tank.tank_drive(center_tank=self.grid_dict[self.position_local][0], rotate=self.rotate)
+        else:
+            self.tank.tank_stand(center_tank=self.grid_dict[self.position_local][0], rotate=self.rotate)
 
         for i in range(numbers_width_grid + 1):
             for j in range(numbers_height_grid + 1):
