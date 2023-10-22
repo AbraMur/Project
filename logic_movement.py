@@ -6,7 +6,7 @@ class Movement(object):
     def __init__(self):
         pass
 
-    def movement(self, position_local, speed_vector, rotate): # метод в котором мы обрабатываем движение
+    def movement(self, position_local, speed_vector, rotate):  # метод в котором мы обрабатываем движение
         if rotate == 0:
             position_local = int(position_local[0]), int(position_local[1] + 2 * speed_vector)
         if rotate == 1:
@@ -33,10 +33,10 @@ class Movement(object):
             position_local = int(position_local[0] - speed_vector), int(position_local[1] + 2 * speed_vector)
         return position_local
 
-    def fix(self, position_local, speed_vector): # метод в котором мы проверяем потенциальную ошибку выхода за карту
+    def fix(self, position_local, speed_vector):  # метод в котором мы проверяем потенциальную ошибку выхода за карту
         if position_local[0] < 0:
             position_local = 1, position_local[1]
-            speed_vector = 0
+            speed_vector = 00
 
         if position_local[0] > numbers_width_grid:
             position_local = numbers_width_grid - 1, position_local[1]
@@ -52,7 +52,7 @@ class Movement(object):
 
         return position_local, speed_vector
 
-    def collision_wall(self, position_local, speed_vector, grid, rotate): # проверяем возможное столкновение со "стеной"
+    def collision_wall(self, position_local, speed_vector, grid, rotate):  # проверяем возможное столкновение со "стеной"
         if 2 <= position_local[0] <= 148 and 2 <= position_local[1] <= 148:
             possible_position = self.movement(position_local, speed_vector, rotate=rotate)
             if grid[(possible_position)][1] != 0:
