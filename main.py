@@ -31,7 +31,7 @@ class Game(object):
         self.grid_dict = self.grid.get()  # мы получаем сетку
         self.position_local = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
 
-        self.tank = Tank(screen=self.screen, motion=self.motion)
+        self.tank = Tank(screen=self.screen)
 
     def setup(self):
         while self.grid_dict[self.position_local][1] != 0:
@@ -71,7 +71,7 @@ class Game(object):
         self.screen.fill(WHITE)
 
         if bool(abs(self.motion)):
-            self.tank.tank_drive(center_tank=self.grid_dict[self.position_local][0], rotate=self.rotate)
+            self.tank.tank_drive(center_tank=self.grid_dict[self.position_local][0], rotate=self.rotate, motion = self.motion)
         else:
             self.tank.tank_stand(center_tank=self.grid_dict[self.position_local][0], rotate=self.rotate)
 

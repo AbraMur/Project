@@ -4,9 +4,8 @@ from constant import *
 
 # класс, отвечающий за анимации танка
 class Tank(object):
-    def __init__(self, screen, motion):
+    def __init__(self, screen):
         self.motion = 0  # вектор "движения"
-        self.motion = motion
         self.screen = screen
         self.tank_time = 0
         self.tank_sprite = [pygame.image.load('assets/tank/Sprite-0001.png'),  # модель танка
