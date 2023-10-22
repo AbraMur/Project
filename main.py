@@ -5,6 +5,7 @@ from logic_movement import Movement
 from perlin_generate import *
 from assets import *
 from tank import Tank
+from transform_perlin_noise import Grid_visual
 
 
 class Game(object):
@@ -22,9 +23,10 @@ class Game(object):
         self.movement = Movement()  # переменная класса мовемент ( движение )
         self.motion = 0  # вектор "движения"
         seed = random.randint(1000, 3000)
-        heights = perlin_generate(seed)
+        self.heights = perlin_generate(seed)
 
-
+        self.heights_n = Grid_visual(position=(0, 0), heights=self.heights)
+        heights = self.heights_n.transform()
 
         self.grid.generate(heights)
         self.rotate = 0

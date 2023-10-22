@@ -6,7 +6,7 @@ import random
 
 def perlin_generate(seed):
     # генерация основного шума и параметризация
-    noise = PerlinNoise(octaves=2, seed=seed)  # 4522
+    noise = PerlinNoise(octaves=2, seed=4522)  # 4522
     elevation = 1  # высота
     chunk_size = 24  # размер чанка
     terrain_width = max(numbers_width_grid, numbers_height_grid) + 1  # размер карты
