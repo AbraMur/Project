@@ -4,7 +4,9 @@ from constant import *
 
 # класс, отвечающий за анимации танка
 class Tank(object):
-    def __init__(self, screen):
+    def __init__(self, screen, motion):
+        self.motion = 0  # вектор "движения"
+        self.motion = motion
         self.screen = screen
         self.tank_time = 0
         self.tank_sprite = [pygame.image.load('assets/tank/Sprite-0001.png'),  # модель танка
@@ -19,9 +21,15 @@ class Tank(object):
         self.tank_rect = tank_sprite.get_rect(center=center_tank)
         self.screen.blit(tank_sprite, self.tank_rect)
 
-    def tank_drive(self, center_tank, rotate):  # анимация танка при движении
+    def tank_drive(self, center_tank, rotate, motion):  # анимация танка при движении
         rotate = rotate * 30
-        self.tank_time = (self.tank_time + 1) % 5
-        tank_sprite = pygame.transform.rotate(self.tank_sprite[self.tank_time], rotate)
-        self.tank_rect = tank_sprite.get_rect(center=center_tank)
-        self.screen.blit(tank_sprite, self.tank_rect)
+        if motion > 0:
+            self.tank_time = (self.tank_time + 1) % 5
+            tank_sprite = pygame.transform.rotate(self.tank_sprite[self.tank_time], rotate)
+            self.tank_rect = tank_sprite.get_rect(center=center_tank)
+            self.screen.blit(tank_sprite, self.tank_rect)
+        if motion < 0:
+            self.tank_time = (self.tank_time - 1) % 5
+            tank_sprite = pygame.transform.rotate(self.tank_sprite[self.tank_time], rotate)
+            self.tank_rect = tank_sprite.get_rect(center=center_tank)
+            self.screen.blit(tank_sprite, self.tank_rect)
