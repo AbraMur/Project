@@ -23,6 +23,9 @@ class Game(object):
         self.motion = 0  # вектор "движения"
         seed = random.randint(1000, 3000)
         heights = perlin_generate(seed)
+
+
+
         self.grid.generate(heights)
         self.rotate = 0
         self.grid_dict = self.grid.get()  # мы получаем сетку
