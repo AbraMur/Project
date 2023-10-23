@@ -26,7 +26,7 @@ class Game(object):
         self.heights = perlin_generate(seed)
 
         self.heights_n = Grid_visual(position=(0, 0), heights=self.heights)
-        heights = self.heights_n.transform()
+        heights = self.heights_n.transform((0, 0))
 
         self.grid.generate(heights)
         self.rotate = 0
@@ -36,8 +36,9 @@ class Game(object):
         self.tank = Tank(screen=self.screen)
 
     def setup(self):
-        while self.grid_dict[self.position_local][1] != 0:
-            self.position_local = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
+        # while self.grid_dict[self.position_local][1] != 0:
+        #     self.position_local = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
+        self.position_local = x_start_local, y_start_local
 
     def run(self):
         self.setup()
@@ -47,6 +48,10 @@ class Game(object):
 
             self.motion = self.movement.collision_wall(self.position_local, self.motion, self.grid_dict, self.rotate)
             self.position_local = self.movement.movement(self.position_local, self.motion, self.rotate)
+
+            heights = self.heights_n.transform((self.position_local[0] - x_start_local, self.position_local[1] - y_start_local))
+            self.grid.generate(heights)
+
             self.position_local, self.motion = self.movement.fix(self.position_local, self.motion)
             self.draw()
             pygame.display.update()

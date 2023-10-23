@@ -21,8 +21,8 @@ x_global_coord_grid = 0
 y_global_coord_grid = 0
 
 # стартовая позиция
-x_start_local = 50
-y_start_local = 50
+x_start_local = 75
+y_start_local = 75
 
 # количество строк и столбцов сетки
 numbers_height_grid = 150
