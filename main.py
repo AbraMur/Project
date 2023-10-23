@@ -31,14 +31,17 @@ class Game(object):
         self.grid.generate(heights)
         self.rotate = 0
         self.grid_dict = self.grid.get()  # мы получаем сетку
-        self.position_local = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
+
+        self.position_local = x_start_local, y_start_local
 
         self.tank = Tank(screen=self.screen)
 
     def setup(self):
-        # while self.grid_dict[self.position_local][1] != 0:
-        #     self.position_local = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
-        self.position_local = x_start_local, y_start_local
+        while self.grid_dict[self.position_local][1] != 0:
+            heights = self.heights_n.transform((self.position_local[0] - x_start_local, self.position_local[1] - y_start_local))
+            self.grid.generate(heights)
+            self.position_local = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
+
 
     def run(self):
         self.setup()
@@ -64,13 +67,13 @@ class Game(object):
             if event.key == pygame.K_ESCAPE:
                 self.stop()
             if event.key == pygame.K_w:
-                self.motion = self.motion - acceleration
+                self.motion = (self.motion - acceleration)
             if event.key == pygame.K_a:
                 self.rotate = (self.rotate + 1) % 12
             if event.key == pygame.K_d:
                 self.rotate = (self.rotate - 1) % 12
             if event.key == pygame.K_s:
-                self.motion = self.motion + acceleration
+                self.motion = (self.motion + acceleration)
             if event.key == pygame.K_SPACE:
                 self.motion = 0
 
