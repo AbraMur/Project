@@ -30,3 +30,7 @@ numbers_width_grid = 150
 
 # радиус тестовой точки
 test_radius_object = 5
+
+# размеры танка
+tank_width = 38
+tank_height = 43
