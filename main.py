@@ -36,6 +36,8 @@ class Game(object):
 
         self.tank = Tank(screen=self.screen)
 
+        self.tank_box = self.tank.tank_collision_pos(self.position_local, self.rotate)
+
     def setup(self):
         while self.grid_dict[self.position_local][1] != 0:
             heights = self.heights_n.transform((self.position_local[0] - x_start_local, self.position_local[1] - y_start_local))
@@ -49,7 +51,9 @@ class Game(object):
             for event in pygame.event.get():
                 self.event_handler(event)
 
-            self.motion = self.movement.collision_wall(self.position_local, self.motion, self.grid_dict, self.rotate)
+            self.tank_box = self.tank.tank_collision_pos(self.position_local, self.rotate)
+            for pos in self.tank_box:
+                self.motion = self.movement.collision_wall(pos, self.motion, self.grid_dict, self.rotate)
             self.position_local = self.movement.movement(self.position_local, self.motion, self.rotate)
 
             heights = self.heights_n.transform((self.position_local[0] - x_start_local, self.position_local[1] - y_start_local))
@@ -91,7 +95,9 @@ class Game(object):
                 color = (abs(inf[1] * 100), abs(inf[1] * 100), abs(inf[1] * 100))
                 if inf[1]:
                     pygame.draw.circle(self.screen, color, inf[0], 3)
-
+        
+        for j in self.tank_box:
+            pygame.draw.circle(self.screen, ORANGE, self.grid_dict[j][0], 3)
         # for i in range(numbers_height_grid + 1):
         #     pygame.draw.line(self.screen, ORANGE,[x0, y0+h*i/wl],[x0+width, y0+h*i/wl])
         #     pygame.draw.line(self.screen, ORANGE, [x0+h*i/hl, y0], [x0 + h * i / hl, y0 + width])

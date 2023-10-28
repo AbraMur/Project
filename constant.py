@@ -44,15 +44,4 @@ h = 200
 hl = 3  # numbers_height_grid // 3
 wl = 3  # numbers_width_grid // 3
 
-# коорды position_local
-x1 = x0 - tank_width // 2
-y1 = y0 - tank_height // 2
 
-x2 = x0 + tank_width // 2
-y2 = y0 - tank_height // 2
-
-x3 = x0 - tank_width // 2
-y3 = y0 + tank_height // 2
-
-x4 = x0 + tank_width // 2
-y4 = y0 + tank_height // 2
