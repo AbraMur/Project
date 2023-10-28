@@ -40,9 +40,9 @@ class Game(object):
 
     def setup(self):
         while self.grid_dict[self.position_local][1] != 0:
+            self.position_local = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
             heights = self.heights_n.transform((self.position_local[0] - x_start_local, self.position_local[1] - y_start_local))
             self.grid.generate(heights)
-            self.position_local = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
 
 
     def run(self):
@@ -51,10 +51,14 @@ class Game(object):
             for event in pygame.event.get():
                 self.event_handler(event)
 
+            self.update()
+
             self.tank_box = self.tank.tank_collision_pos(self.position_local, self.rotate)
             for pos in self.tank_box:
                 self.motion = self.movement.collision_wall(pos, self.motion, self.grid_dict, self.rotate)
-            self.position_local = self.movement.movement(self.position_local, self.motion, self.rotate)
+
+            if self.tank.can_drive():
+                self.position_local = self.movement.movement(self.position_local, self.motion, self.rotate)
 
             heights = self.heights_n.transform((self.position_local[0] - x_start_local, self.position_local[1] - y_start_local))
             self.grid.generate(heights)
@@ -63,6 +67,9 @@ class Game(object):
             self.draw()
             pygame.display.update()
             self.clock.tick(FPS)
+
+    def update(self):
+        self.tank.update()
 
     def event_handler(self, event):
         if event.type == pygame.QUIT:
