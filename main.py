@@ -92,6 +92,11 @@ class Game(object):
                 if inf[1]:
                     pygame.draw.circle(self.screen, color, inf[0], 3)
 
+        # for i in range(numbers_height_grid + 1):
+        #     pygame.draw.line(self.screen, ORANGE,[x0, y0+h*i/wl],[x0+width, y0+h*i/wl])
+        #     pygame.draw.line(self.screen, ORANGE, [x0+h*i/hl, y0], [x0 + h * i / hl, y0 + width])
+
+
     def stop(self):
         self.running = False
 
