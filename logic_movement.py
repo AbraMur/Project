@@ -10,9 +10,9 @@ class Movement(object):
 
     def movement(self, position_local, speed_vector, rotate):  # метод в котором мы обрабатываем движение
         pi = math.pi
-        position_local_1 = int(position_local[0] + round(math.sin(pi / 6 * rotate) * 2) * speed_vector), \
+        position_local = int(position_local[0] + round(math.sin(pi / 6 * rotate) * 2) * speed_vector), \
                            int(position_local[1] + round(math.cos(pi / 6 * rotate) * 2) * speed_vector)
-        return position_local_1
+        return position_local
 
     def fix(self, position_local, speed_vector):  # метод в котором мы проверяем потенциальную ошибку выхода за карту
         if position_local[0] < 0:
@@ -33,8 +33,7 @@ class Movement(object):
 
         return position_local, speed_vector
 
-    def collision_wall(self, position_local, speed_vector, grid,
-                       rotate):  # проверяем возможное столкновение со "стеной"
+    def collision_wall(self, position_local, speed_vector, grid, rotate):  # проверяем возможное столкновение со "стеной"
         if 2 <= position_local[0] <= 148 and 2 <= position_local[1] <= 148:
             possible_position = self.movement(position_local, speed_vector, rotate=rotate)
             if grid[(possible_position)][1] != 0:

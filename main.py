@@ -52,8 +52,7 @@ class Game(object):
             self.update()
 
             self.tank_box = self.tank.tank_collision_pos(self.tank.position)
-            for pos in self.tank_box:
-                self.tank.speed = self.movement.collision_wall(pos, self.tank.speed, self.grid_dict, self.tank.rotate)
+
 
             if self.tank.can_drive():
                 self.tank.position = self.movement.movement(self.tank.position, self.tank.speed, self.tank.rotate)
@@ -62,6 +61,10 @@ class Game(object):
             self.grid.generate(heights)
 
             self.tank.position, self.tank.speed = self.movement.fix(self.tank.position, self.tank.speed)
+
+            for pos in self.tank_box:
+                self.tank.speed = self.movement.collision_wall(pos, self.tank.speed, self.grid_dict, self.tank.rotate)
+
             self.draw()
             pygame.display.update()
             self.clock.tick(FPS)
