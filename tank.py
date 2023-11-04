@@ -4,16 +4,16 @@ from constant import *
 
 # класс, отвечающий за анимации танка
 class Tank(object):
-    def __init__(self, screen):
+    def __init__(self, game):
         self.speed = 0
         self.rotate = 0
         self.position = x_start_local, y_start_local
 
         self.motion = 0  # вектор "движения" !!!
-        self.screen = screen
-        self.tank_time = 0 # !!!
-        self.speed_1 = 8 # !!!
-        self.speed_tick = 0 # ?
+        self.game = game
+        self.tank_time = 0  # !!!
+        self.speed_1 = 8  # !!!
+        self.speed_tick = 0  # ?
         self.tank_sprite_straight = [pygame.image.load('assets/tank/Straight/Sprite-0001.png'),  # модель танка при движении вперёд/назад
                             pygame.image.load('assets/tank/Straight/Sprite-0002.png'),
                             pygame.image.load('assets/tank/Straight/Sprite-0003.png'),
@@ -40,6 +40,13 @@ class Tank(object):
         if self.speed_tick == self.speed_1:
             self.speed_tick = 0
 
+    def draw(self, screen):
+        if bool(abs(self.speed)):
+            self.tank_drive(center_tank=self.game.grid_dict[self.position][0], motion=self.speed)
+        else:
+            self.tank_stand(center_tank=self.game.grid_dict[self.position][0])
+
+
     def tank_front(self):
         self.speed += acceleration
 
@@ -52,6 +59,19 @@ class Tank(object):
     def tank_rotate_left(self):
         self.rotate = (self.rotate - 1) % 12
 
+    def event_handler(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                self.tank_back()
+            if event.key == pygame.K_a:
+                self.tank_rotate_right()
+            if event.key == pygame.K_d:
+                self.tank_rotate_left()
+            if event.key == pygame.K_s:
+                self.tank_front()
+            if event.key == pygame.K_SPACE:
+                self.speed = 0
+
     def can_drive(self):
         return self.speed_tick == 0
 
@@ -60,7 +80,7 @@ class Tank(object):
 
         tank_sprite = pygame.transform.rotate(self.tank_sprite_straight[self.tank_time], rotate)
         self.tank_rect = tank_sprite.get_rect(center=center_tank)
-        self.screen.blit(tank_sprite, self.tank_rect)
+        self.game.screen.blit(tank_sprite, self.tank_rect)
 
     def tank_drive(self, center_tank, motion):  # анимация танка при движении
         rotate = self.rotate * delta
@@ -69,7 +89,7 @@ class Tank(object):
         self.tank_time = (self.tank_time + sign * 1) % 5
         tank_sprite = pygame.transform.rotate(self.tank_sprite_straight[self.tank_time], rotate)
         self.tank_rect = tank_sprite.get_rect(center=center_tank)
-        self.screen.blit(tank_sprite, self.tank_rect)
+        self.game.screen.blit(tank_sprite, self.tank_rect)
         
     def tank_collision_pos(self, center_tank, rotate=0):
         x0, y0 = center_tank

@@ -3,7 +3,6 @@ from constant import *
 from grid import Grid
 from logic_movement import Movement
 from perlin_generate import *
-from assets import *
 from tank import Tank
 from transform_perlin_noise import Grid_visual
 
@@ -20,6 +19,7 @@ class Game(object):
         self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))  # что бы окошечко было
         self.running = True  # переменная что бы работал главный цикл
         self.grid = Grid()  # переменная класса сетки ( создаем сетку, получаем и тп )
+        self.objects = []
 
         self.movement = Movement()  # переменная класса мовемент ( движение )  убрать класс мотион создать набор функций движения
 
@@ -29,13 +29,14 @@ class Game(object):
         self.heights_n = Grid_visual(position=(0, 0), heights=self.heights) # это всё с сеткой связанно
         heights = self.heights_n.transform((0, 0)) # это всё с сеткой связанно
 
-        self.grid.generate(heights) # это всё с сеткой связанно
+        self.grid.generate(heights)  # это всё с сеткой связанно
 
         self.grid_dict = self.grid.get()  # мы получаем сетку
 
-        self.tank = Tank(screen=self.screen) # ТАНК
-        self.tank_box = self.tank.tank_collision_pos(self.tank.position) # ТАНК
+        self.tank = Tank(game=self)  # ТАНК
+        self.tank_box = self.tank.tank_collision_pos(self.tank.position)  # ТАНК
 
+        self.objects.append(self.tank)
     def setup(self):
         while self.grid_dict[self.tank.position][1] != 0:
             self.tank.position = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
@@ -63,14 +64,24 @@ class Game(object):
             self.tank.position, self.tank.speed = self.movement.fix(self.tank.position, self.tank.speed)
 
             for pos in self.tank_box:
-                self.tank.speed = self.movement.collision_wall(pos, self.tank.speed, self.grid_dict, self.tank.rotate)
+                self.tank.speed = self.collision_wall(pos, self.tank.speed, self.grid_dict, self.tank.rotate)
 
             self.draw()
             pygame.display.update()
             self.clock.tick(FPS)
 
     def update(self):
-        self.tank.update()
+        for obj in self.objects:
+            obj.update()
+
+    def collision_wall(self, position_local, speed_vector, grid, rotate):  # проверяем возможное столкновение со "стеной"
+        if 2 <= position_local[0] <= 148 and 2 <= position_local[1] <= 148:
+            possible_position = self.movement(position_local, speed_vector, rotate=rotate)
+            if grid[(possible_position)][1] != 0:
+                speed_vector = 0
+            return speed_vector
+        else:
+            return speed_vector
 
     def event_handler(self, event):
         if event.type == pygame.QUIT:
@@ -78,24 +89,14 @@ class Game(object):
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.stop()
-            if event.key == pygame.K_w:
-                self.tank.tank_back()
-            if event.key == pygame.K_a:
-                self.tank.tank_rotate_right()
-            if event.key == pygame.K_d:
-                self.tank.tank_rotate_left()
-            if event.key == pygame.K_s:
-                self.tank.tank_front()
-            if event.key == pygame.K_SPACE:
-                self.motion = 0
+        for obj in self.objects:
+            obj.event_handler(event)
 
     def draw(self):
         self.screen.fill(WHITE)
 
-        if bool(abs(self.tank.speed)):
-            self.tank.tank_drive(center_tank=self.grid_dict[self.tank.position][0],motion = self.tank.speed)
-        else:
-            self.tank.tank_stand(center_tank=self.grid_dict[self.tank.position][0])
+        for obj in self.objects:
+            obj.draw(self.screen)
 
         for i in range(numbers_width_grid + 1):
             for j in range(numbers_height_grid + 1):

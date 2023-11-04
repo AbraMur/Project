@@ -32,12 +32,3 @@ class Movement(object):
             speed_vector = 0
 
         return position_local, speed_vector
-
-    def collision_wall(self, position_local, speed_vector, grid, rotate):  # проверяем возможное столкновение со "стеной"
-        if 2 <= position_local[0] <= 148 and 2 <= position_local[1] <= 148:
-            possible_position = self.movement(position_local, speed_vector, rotate=rotate)
-            if grid[(possible_position)][1] != 0:
-                speed_vector = 0
-            return speed_vector
-        else:
-            return speed_vector
