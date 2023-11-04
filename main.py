@@ -5,6 +5,7 @@ from logic_movement import Movement
 from perlin_generate import *
 from tank import Tank
 from transform_perlin_noise import Grid_visual
+import math
 
 
 class Game(object):
@@ -23,8 +24,8 @@ class Game(object):
 
         self.movement = Movement()  # переменная класса мовемент ( движение )  убрать класс мотион создать набор функций движения
 
-        seed = random.randint(1000, 3000) # это всё с сеткой связанно
-        self.heights = perlin_generate(seed) # это всё с сеткой связанно
+        seed = random.randint(1000, 3000)  # это всё с сеткой связанно
+        self.heights = perlin_generate(seed)  # это всё с сеткой связанно
 
         self.heights_n = Grid_visual(position=(0, 0), heights=self.heights) # это всё с сеткой связанно
         heights = self.heights_n.transform((0, 0)) # это всё с сеткой связанно
@@ -74,9 +75,15 @@ class Game(object):
         for obj in self.objects:
             obj.update()
 
+    def movement_1(self, position_local, speed_vector, rotate):  # метод в котором мы обрабатываем движение
+        pi = math.pi
+        position_local = int(position_local[0] + round(math.sin(pi / 6 * rotate) * 2) * speed_vector), \
+                           int(position_local[1] + round(math.cos(pi / 6 * rotate) * 2) * speed_vector)
+        return position_local
+
     def collision_wall(self, position_local, speed_vector, grid, rotate):  # проверяем возможное столкновение со "стеной"
         if 2 <= position_local[0] <= 148 and 2 <= position_local[1] <= 148:
-            possible_position = self.movement(position_local, speed_vector, rotate=rotate)
+            possible_position = self.movement_1(position_local, speed_vector, rotate=rotate)
             if grid[(possible_position)][1] != 0:
                 speed_vector = 0
             return speed_vector
