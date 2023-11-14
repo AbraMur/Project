@@ -1,7 +1,6 @@
 import pygame
 from constant import *
 from grid import Grid
-from logic_movement import Movement
 from perlin_generate import *
 from tank import Tank
 from transform_perlin_noise import Grid_visual
@@ -20,15 +19,14 @@ class Game(object):
         self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))  # что бы окошечко было
         self.running = True  # переменная что бы работал главный цикл
         self.grid = Grid()  # переменная класса сетки ( создаем сетку, получаем и тп )
-        self.objects = []
+        self.objects = []  # набор объектов
 
-        self.movement = Movement()  # переменная класса мовемент ( движение )  убрать класс мотион создать набор функций движения
 
         seed = random.randint(1000, 3000)  # это всё с сеткой связанно
         self.heights = perlin_generate(seed)  # это всё с сеткой связанно
 
-        self.heights_n = Grid_visual(position=(0, 0), heights=self.heights) # это всё с сеткой связанно
-        heights = self.heights_n.transform((0, 0)) # это всё с сеткой связанно
+        self.heights_n = Grid_visual(position=(0, 0), heights=self.heights)  # это всё с сеткой связанно
+        heights = self.heights_n.transform((0, 0))  # это всё с сеткой связанно
 
         self.grid.generate(heights)  # это всё с сеткой связанно
 
@@ -38,6 +36,7 @@ class Game(object):
         self.tank_box = self.tank.tank_collision_pos(self.tank.position)  # ТАНК
 
         self.objects.append(self.tank)
+
     def setup(self):
         while self.grid_dict[self.tank.position][1] != 0:
             self.tank.position = random.randint(1, numbers_height_grid), random.randint(1, numbers_width_grid)
@@ -57,12 +56,12 @@ class Game(object):
 
 
             if self.tank.can_drive():
-                self.tank.position = self.movement.movement(self.tank.position, self.tank.speed, self.tank.rotate)
+                self.tank.position = self.movement_1(self.tank.position, self.tank.speed, self.tank.rotate)
 
             heights = self.heights_n.transform((self.tank.position[0] - x_start_local, self.tank.position[1] - y_start_local))
             self.grid.generate(heights)
 
-            self.tank.position, self.tank.speed = self.movement.fix(self.tank.position, self.tank.speed)
+            self.tank.position, self.tank.speed = self.fix(self.tank.position, self.tank.speed)
 
             for pos in self.tank_box:
                 self.tank.speed = self.collision_wall(pos, self.tank.speed, self.grid_dict, self.tank.rotate)
@@ -80,6 +79,25 @@ class Game(object):
         position_local = int(position_local[0] + round(math.sin(pi / 6 * rotate) * 2) * speed_vector), \
                            int(position_local[1] + round(math.cos(pi / 6 * rotate) * 2) * speed_vector)
         return position_local
+
+    def fix(self, position_local, speed_vector):  # метод в котором мы проверяем потенциальную ошибку выхода за карту
+        if position_local[0] < 0:
+            position_local = 1, position_local[1]
+            speed_vector = 0
+
+        if position_local[0] > numbers_width_grid:
+            position_local = numbers_width_grid - 1, position_local[1]
+            speed_vector = 0
+
+        if position_local[1] < 0:
+            position_local = position_local[0], 1
+            speed_vector = 0
+
+        if position_local[1] > numbers_height_grid:
+            position_local = position_local[0], numbers_height_grid - 1
+            speed_vector = 0
+
+        return position_local, speed_vector
 
     def collision_wall(self, position_local, speed_vector, grid, rotate):  # проверяем возможное столкновение со "стеной"
         if 2 <= position_local[0] <= 148 and 2 <= position_local[1] <= 148:

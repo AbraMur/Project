@@ -9,11 +9,10 @@ class Tank(object):
         self.rotate = 0
         self.position = x_start_local, y_start_local
 
-        self.motion = 0  # вектор "движения" !!!
         self.game = game
-        self.tank_time = 0  # !!!
-        self.speed_1 = 8  # !!!
-        self.speed_tick = 0  # ?
+        self.tank_time = 0  # за анимацию отвечает
+        self.speed_1 = 8  # максимальная скорость
+        self.speed_tick = 0  # скорость
         self.tank_sprite_straight = [pygame.image.load('assets/tank/Straight/Sprite-0001.png'),  # модель танка при движении вперёд/назад
                             pygame.image.load('assets/tank/Straight/Sprite-0002.png'),
                             pygame.image.load('assets/tank/Straight/Sprite-0003.png'),
