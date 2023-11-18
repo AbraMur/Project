@@ -1,10 +1,10 @@
 import pygame
+import math
 from constant import *
 from grid import Grid
 from perlin_generate import *
 from tank import Tank
 from transform_perlin_noise import Grid_visual
-import math
 
 
 class Game(object):
