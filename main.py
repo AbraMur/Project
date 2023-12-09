@@ -1,9 +1,11 @@
 import pygame
+import random
 import math
-from constant import *
 from grid import Grid
-from perlin_generate import *
+from constant import *
 from tank import Tank
+from perlin_generate import *
+from bullet import Bullet
 from transform_perlin_noise import Grid_visual
 
 
@@ -21,19 +23,20 @@ class Game(object):
         self.grid = Grid()  # переменная класса сетки ( создаем сетку, получаем и тп )
         self.objects = []  # набор объектов
 
+        seed = random.randint(1000, 3000)  # это всё с сеткой связано
+        self.heights = perlin_generate(seed)  # это всё с сеткой связано
 
-        seed = random.randint(1000, 3000)  # это всё с сеткой связанно
-        self.heights = perlin_generate(seed)  # это всё с сеткой связанно
+        self.heights_n = Grid_visual(position=(0, 0), heights=self.heights)  # это всё с сеткой связано
+        heights = self.heights_n.transform((0, 0))  # это всё с сеткой связано
 
-        self.heights_n = Grid_visual(position=(0, 0), heights=self.heights)  # это всё с сеткой связанно
-        heights = self.heights_n.transform((0, 0))  # это всё с сеткой связанно
-
-        self.grid.generate(heights)  # это всё с сеткой связанно
+        self.grid.generate(heights)  # это всё с сеткой связано
 
         self.grid_dict = self.grid.get()  # мы получаем сетку
 
         self.tank = Tank(game=self)  # ТАНК
         self.tank_box = self.tank.tank_collision_pos(self.tank.position)  # ТАНК
+
+        self.bullets = []
 
         self.objects.append(self.tank)
 
@@ -54,7 +57,6 @@ class Game(object):
 
             self.tank_box = self.tank.tank_collision_pos(self.tank.position)
 
-
             if self.tank.can_drive():
                 self.tank.position = self.movement_1(self.tank.position, self.tank.speed, self.tank.rotate)
 
@@ -66,6 +68,8 @@ class Game(object):
             for pos in self.tank_box:
                 self.tank.speed = self.collision_wall(pos, self.tank.speed, self.grid_dict, self.tank.rotate)
 
+            self.border_map()
+
             self.draw()
             pygame.display.update()
             self.clock.tick(FPS)
@@ -73,6 +77,8 @@ class Game(object):
     def update(self):
         for obj in self.objects:
             obj.update()
+        for bull in self.bullets:
+            bull.fly()
 
     def movement_1(self, position_local, speed_vector, rotate):  # метод в котором мы обрабатываем движение
         pi = math.pi
@@ -114,8 +120,17 @@ class Game(object):
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.stop()
+            if event.key == pygame.K_g:
+                self.bullets.append(Bullet(self.tank.position, self, self.tank.rotate))
         for obj in self.objects:
             obj.event_handler(event)
+
+    def border_map(self):
+        for bull in self.bullets:
+            if bull.x > 150 or bull.x < 0:
+                self.bullets.pop(self.bullets.index(bull))
+            if bull.y > 150 or bull.y < 0:
+                self.bullets.pop(self.bullets.index(bull))
 
     def draw(self):
         self.screen.fill(WHITE)
@@ -132,6 +147,9 @@ class Game(object):
         
         for j in self.tank_box:
             pygame.draw.circle(self.screen, ORANGE, self.grid_dict[j][0], 3)
+
+        for bull in self.bullets:
+            bull.draw(self.screen)
 
         # for i in range(numbers_height_grid + 1):
         #     pygame.draw.line(self.screen, ORANGE,[x0, y0+h*i/wl],[x0+width, y0+h*i/wl])

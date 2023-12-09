@@ -1,7 +1,6 @@
 from numpy import floor
 from perlin_noise import PerlinNoise
 from constant import numbers_height_grid, numbers_width_grid
-import random
 
 
 def perlin_generate(seed):

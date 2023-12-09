@@ -1,5 +1,6 @@
 import pygame
 from constant import *
+from bullet import Bullet
 
 
 # класс, отвечающий за все, что связано с танком (анимации, движение, коллизия и т.п.)
@@ -35,8 +36,6 @@ class Tank(object):
                             pygame.image.load('assets/tank/Turn left/Sprite-0012.png'),
                             pygame.image.load('assets/tank/Turn left/Sprite-0013.png')]  # модель танка при повороте налево
 
-        self.bullet_img = [pygame.image.load('assets/secondary objects/bullets/bullet.png')]  # модель снаряда
-
     def update(self, speed=0):
         # self.speed += speed
         self.speed_tick += 1
@@ -49,7 +48,7 @@ class Tank(object):
         else:
             self.tank_stand(center_tank=self.game.grid_dict[self.position][0])
 
-    def tank_front(self):  # движение танка влево
+    def tank_front(self):  # движение танка назад
         self.speed += acceleration
 
     def tank_back(self):  # движение танка вперед
@@ -73,8 +72,6 @@ class Tank(object):
                 self.tank_front()
             if event.key == pygame.K_SPACE:
                 self.speed = 0
-            if event.key == pygame.K_g:
-                self.shoot()
 
     def can_drive(self):
         return self.speed_tick == 0
@@ -112,14 +109,5 @@ class Tank(object):
         
         return [(x1, y1), (x2, y2), (x3, y3), (x4, y4)]
 
-    def bullet(self, center_tank):
-        bullet = self.bullet_img()
-        self.bullet_rect = bullet.get_rect(center=center_tank)
-        self.game.screen.blit(bullet, self.bullet_rect)
-
-    def shoot(self, center_tank):
-        bullet = self.bullet_img()
-        x, y = center_tank
-        self.bullet_rect = bullet.get_rect(x, y)
-        while 1 > 0:
-            y += 4
+    def bullet(self):
+        pass

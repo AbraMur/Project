@@ -11,7 +11,6 @@ class Grid_visual(object):
         position = ((len(self.heights) - (self.size // 2 - 1) * 2) // 2) + position_n[0], \
                    ((len(self.heights) - (self.size // 2 - 1) * 2) // 2) + position_n[1]
 
-
         for x in range(position[0], position[0] + self.size):
             for y in range(position[1], position[1] + self.size):
 
