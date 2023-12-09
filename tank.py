@@ -108,6 +108,3 @@ class Tank(object):
         y4 = y0 + tank_height // 2
         
         return [(x1, y1), (x2, y2), (x3, y3), (x4, y4)]
-
-    def bullet(self):
-        pass
