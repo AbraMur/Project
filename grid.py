@@ -16,5 +16,8 @@ class Grid(object):
                                      y_global_coord_grid + height * j / numbers_height_grid - height / (numbers_height_grid * 2)), \
                                     heights_list[i][j]
 
+    def delete_wall(self, position_local):
+        self.grid[position_local] = self.grid[position_local][0], self.grid[position_local][1], 0
+
     def get(self):  # получаем сетку по запросу
         return self.grid

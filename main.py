@@ -68,6 +68,7 @@ class Game(object):
                 self.tank.speed = self.collision_wall(pos, self.tank.speed, self.grid_dict, self.tank.rotate)
 
             self.border_map()
+            self.crash_wall()
 
             self.draw()
             pygame.display.update()
@@ -131,6 +132,13 @@ class Game(object):
             if bull.y > 150 or bull.y < 0:
                 self.bullets.pop(self.bullets.index(bull))
 
+    def crash_wall(self):  # метод, отвечающий за разрушение снарядом стены
+        for bull in self.bullets:
+            bullet_position = bull.x, bull.y
+            if self.grid_dict[(bullet_position)][1] != 0:
+                self.bullets.pop(self.bullets.index(bull))
+                self.grid.delete_wall(bullet_position)
+
     def draw(self):
         self.screen.fill(WHITE)
 
@@ -147,8 +155,8 @@ class Game(object):
                 if inf[1]:
                     pygame.draw.circle(self.screen, color, inf[0], 3)
         
-        for j in self.tank_box:
-            pygame.draw.circle(self.screen, ORANGE, self.grid_dict[j][0], 3)
+        # for j in self.tank_box:
+        #     pygame.draw.circle(self.screen, ORANGE, self.grid_dict[j][0], 3)
 
         # for i in range(numbers_height_grid + 1):
         #     pygame.draw.line(self.screen, ORANGE,[x0, y0+h*i/wl],[x0+width, y0+h*i/wl])
