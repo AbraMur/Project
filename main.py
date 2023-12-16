@@ -46,7 +46,6 @@ class Game(object):
             heights = self.heights_n.transform((self.tank.position[0] - x_start_local, self.tank.position[1] - y_start_local))
             self.grid.generate(heights)
 
-
     def run(self):
         self.setup()
         while self.running:
@@ -121,11 +120,11 @@ class Game(object):
             if event.key == pygame.K_ESCAPE:
                 self.stop()
             if event.key == pygame.K_g:
-                self.bullets.append(Bullet(self.tank.position, self, self.tank.rotate))
+                self.bullets.append(Bullet(self.tank.position, self, self.tank.rotate, self.tank))
         for obj in self.objects:
             obj.event_handler(event)
 
-    def border_map(self):
+    def border_map(self):  # метод, проверяющий выход снаряда за пределы карты
         for bull in self.bullets:
             if bull.x > 150 or bull.x < 0:
                 self.bullets.pop(self.bullets.index(bull))
@@ -134,6 +133,9 @@ class Game(object):
 
     def draw(self):
         self.screen.fill(WHITE)
+
+        for bull in self.bullets:
+            bull.draw(self.screen)
 
         for obj in self.objects:
             obj.draw(self.screen)
@@ -147,9 +149,6 @@ class Game(object):
         
         for j in self.tank_box:
             pygame.draw.circle(self.screen, ORANGE, self.grid_dict[j][0], 3)
-
-        for bull in self.bullets:
-            bull.draw(self.screen)
 
         # for i in range(numbers_height_grid + 1):
         #     pygame.draw.line(self.screen, ORANGE,[x0, y0+h*i/wl],[x0+width, y0+h*i/wl])

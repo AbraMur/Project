@@ -1,6 +1,5 @@
 import pygame
 from constant import *
-from bullet import Bullet
 
 
 # класс, отвечающий за все, что связано с танком (анимации, движение, коллизия и т.п.)
