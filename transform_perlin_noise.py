@@ -20,3 +20,6 @@ class Grid_visual(object):
                         heights_n[x1 + (x - position[0]) * zoom + 1][y1 + (y - position[1]) * zoom + 1] = self.heights[x][y]
 
         return heights_n
+
+    def changes_heights(self, position_c):
+        self.heights[position_c[0]][position_c[1]] = 0

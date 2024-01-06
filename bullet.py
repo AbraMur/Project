@@ -5,7 +5,7 @@ from constant import *
 # класс, отвечающий за снаряд и все с ним связанное
 class Bullet(object):
     def __init__(self, center, game, tank_rotate, tank):
-        self.bullet_img = pygame.image.load('assets/secondary objects/bullets/bullet.png')  # модель снаряда
+        self.bullet_img = pygame.image.load('assets/secondary/bullet.png')  # модель снаряда
         self.x, self.y = center
         self.game = game
         self.tank = tank

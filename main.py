@@ -135,9 +135,12 @@ class Game(object):
     def crash_wall(self):  # метод, отвечающий за разрушение снарядом стены
         for bull in self.bullets:
             bullet_position = bull.x, bull.y
+            # print(bull.x, bull.y, self.grid_dict[(bullet_position)][1])
             if self.grid_dict[(bullet_position)][1] != 0:
+                print(bull.x, bull.y, self.grid_dict[(bullet_position)][1])
                 self.bullets.pop(self.bullets.index(bull))
                 self.grid.delete_wall(bullet_position)
+                self.heights_n.changes_heights(bullet_position)
 
     def draw(self):
         self.screen.fill(WHITE)
