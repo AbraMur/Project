@@ -43,5 +43,3 @@ y0 = 0
 h = 200
 hl = 3  # numbers_height_grid // 3
 wl = 3  # numbers_width_grid // 3
-
-

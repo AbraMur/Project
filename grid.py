@@ -5,7 +5,7 @@ from perlin_generate import *
 # класс сетки
 class Grid(object):
     '''  ВАЖНО ПОНИМАТЬ, ЧТО СЕТКА ИМЕЕТ ВИД dict[(local_x, local_y)] = ((global_x, global_y), heights)
-    key = (local_x, local_y) values = ((global_x, global_y), heights)'''
+    key = (local_x, local_y) values = ((global_x, global_y), heights)  '''
     def __init__(self):  # создаем переменную "сетки", указываем её тип (словарь)
         self.grid = dict()
 
